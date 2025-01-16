@@ -48,6 +48,13 @@ const login = Joi.object({
 	}),
 });
 
+const validateJwt = Joi.object({
+	token: Joi.string().required().messages({
+		"string.base": "Token should be a string.",
+		"any.required": "Token is required.",
+	}),
+});
+
 export default {
 	"/api/v1/users/create": {
 		schema: createUser,
@@ -55,6 +62,10 @@ export default {
 	},
 	"/api/v1/users/login": {
 		schema: login,
+		paramType: "body",
+	},
+	"/api/v1/users/validate/jwt": {
+		schema: validateJwt,
 		paramType: "body",
 	},
 };

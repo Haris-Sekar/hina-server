@@ -9,6 +9,21 @@ export default sequelize.define(
 			primaryKey: true,
 			autoIncrement: true,
 		},
+		customer_code: {
+			type: DataTypes.STRING,
+			allowNull: false,
+			unique: true,
+		},
+		customer_type: {
+			type: DataTypes.ENUM("1", "2"),
+			allowNull: false,
+			defaultValue: "1",
+		},
+		status: {
+			type: DataTypes.ENUM("ACTIVE", "INACTIVE"),
+			allowNull: false,
+			defaultValue: "ACTIVE",
+		},
 		organization_id: {
 			type: DataTypes.INTEGER,
 			allowNull: false,
@@ -21,18 +36,12 @@ export default sequelize.define(
 			type: DataTypes.STRING,
 			allowNull: false,
 		},
-		display_name: {
-			type: DataTypes.STRING,
-			allowNull: false,
-		},
 		email: {
 			type: DataTypes.STRING,
 			allowNull: false,
-			unique: true,
 		},
 		phone: {
 			type: DataTypes.STRING,
-			allowNull: false,
 		},
 		pan_card: {
 			type: DataTypes.STRING,
@@ -50,6 +59,16 @@ export default sequelize.define(
 				model: "addresses",
 				key: "id",
 			},
+		},
+		opening_balance: {
+			type: DataTypes.DECIMAL(10, 2),
+			defaultValue: 0.0, // Default opening balance is 0
+			allowNull: false,
+		},
+		current_balance: {
+			type: DataTypes.DECIMAL(10, 2),
+			defaultValue: 0.0,
+			allowNull: false,
 		},
 		created_time: {
 			type: DataTypes.BIGINT,

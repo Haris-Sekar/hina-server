@@ -29,7 +29,7 @@ const createCompany = async (req, res) => {
 		// Check if company with GST number already exists
 		const existingCompany = await Organization.findOne({
 			where: { gst_number },
-			transaction
+			transaction,
 		});
 		if (existingCompany) {
 			await transaction.rollback();
@@ -41,12 +41,15 @@ const createCompany = async (req, res) => {
 		}
 
 		// Create new company
-		const company = await Organization.create({
-			name,
-			description,
-			gst_number,
-			created_by: user_id,
-		}, { transaction });
+		const company = await Organization.create(
+			{
+				name,
+				description,
+				gst_number,
+				created_by: user_id,
+			},
+			{ transaction }
+		);
 
 		await seedValues(user_id, company.id, transaction);
 
@@ -66,4 +69,17 @@ const createCompany = async (req, res) => {
 	}
 };
 
-export { validateGst, createCompany };
+const getCompanyDetails = async (req, res) => {
+	try {
+		const company = await Organization.findAll({
+			where: { created_by: req.user.id },
+		});
+		return res.status(200).json(successResponse(company));
+	} catch (error) {
+		return res
+			.status(500)
+			.json(errorResponse("Failed to fetch company details", [], 500));
+	}
+};
+
+export { validateGst, createCompany, getCompanyDetails };

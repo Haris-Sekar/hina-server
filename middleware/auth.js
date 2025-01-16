@@ -1,11 +1,11 @@
 import passport from "passport";
 import { errorResponse } from "../utils/responseFormatter.js";
+import { Organization } from "../models/index.js";
 
 const authenticateUser = (req, res, next) => {
-	passport.authenticate("jwt", { session: false }, (err, user, info) => {
+	passport.authenticate("jwt", { session: false }, async (err, user, info) => {
 		if (err) {
 			return res.status(500).json({
-				success: false,
 				message: "Authentication error",
 				error: err.message,
 			});
@@ -41,9 +41,38 @@ const authenticateUser = (req, res, next) => {
 				);
 		}
 
+		if (req.headers.org_id) {
+			const org = await Organization.findOne({
+				where: {
+					id: req.headers.org_id,
+				},
+			});
+			console.log(org);
+			req.org = org;
+		}
 		req.user = user; // Attach user object to request
 		next(); // Proceed to the next middleware or route handler
 	})(req, res, next);
+};
+
+const authenticateModule = (req, res, next) => {
+	try {
+		const userId = req.user.id;
+
+		if (!userId) {
+			return res
+				.status(401)
+				.json(errorResponse("Unauthorized access!", [], 401));
+		}
+
+		if (!req.headers.org_id) {
+			return res
+				.status(401)
+				.json(errorResponse("Unauthorized access!", [], 401));
+		}
+	} catch (error) {
+		return res.status(401).json(errorResponse("Unauthorized access!", [], 401));
+	}
 };
 
 export default authenticateUser;

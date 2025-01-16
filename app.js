@@ -5,9 +5,11 @@ import configurePassport from "./config/passport.js";
 import { redisStore } from "./config/redis.js"; // Import Redis config
 import session from "express-session";
 import dotenv from "dotenv";
+import cors from "cors";
 
 const app = express();
 
+app.use(cors());
 app.use(express.json());
 dotenv.config();
 
