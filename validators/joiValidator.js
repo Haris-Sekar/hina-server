@@ -2,7 +2,7 @@ import validators from "./schemas/index.js";
 import { errorResponse } from "../utils/responseFormatter.js";
 const validate = async (req, res, next) => {
 	try {
-		const validator = validators[req._parsedOriginalUrl.pathname];
+		const validator = validators[req.originalUrl];
 		await validator.schema.validateAsync(req[validator.paramType], {
 			abortEarly: false,
 		});

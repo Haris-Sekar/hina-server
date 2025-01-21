@@ -46,6 +46,9 @@ export default sequelize.define(
 		pan_card: {
 			type: DataTypes.STRING,
 		},
+		tax_number: {
+			type: DataTypes.STRING
+		},
 		billing_address_id: {
 			type: DataTypes.INTEGER,
 			references: {
@@ -69,6 +72,14 @@ export default sequelize.define(
 			type: DataTypes.DECIMAL(10, 2),
 			defaultValue: 0.0,
 			allowNull: false,
+		},
+		payment_terms: {
+			type: DataTypes.INTEGER,
+			allowNull: true,
+			references: {
+				model: 'configurable_entities',
+				key: 'id'
+			}	
 		},
 		created_time: {
 			type: DataTypes.BIGINT,

@@ -1,5 +1,4 @@
-import { User, Module } from "../models/index.js";
-import bcrypt from "bcryptjs";
+import { User, Module } from "../models/index.js"; 
 const defaultModules = [
 	{
 		name: "Users",

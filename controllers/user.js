@@ -33,7 +33,7 @@ const createUser = async (req, res) => {
 			role_id: null, //portal owner
 		});
 
-		const token = jwt.sign({ ...newUser }, process.env.JWT_SECRET, {
+		const token = jwt.sign({ ...newUser.dataValues }, process.env.JWT_SECRET, {
 			expiresIn: "6h",
 		});
 
@@ -74,7 +74,7 @@ const confirmEmail = async (req, res) => {
 	try {
 		// Verify the token
 		const decoded = jwt.verify(token, process.env.JWT_SECRET);
-		const user = await User.findByPk(decoded.id.id);
+		const user = await User.findByPk(decoded.id);
 
 		if (!user) {
 			return res.status(404).json(errorResponse("User not fount", [], 404));
@@ -180,8 +180,11 @@ const validateJWTAndReturnUserObject = async (req, res) => {
 	try {
 		const { token } = req.body;
 		const obj = jwt.verify(token, process.env.JWT_SECRET);
-		if (obj) {
-			return res.status(200).json(successResponse(obj));
+		const userDetails = await User.findByPk(obj.id);
+		if (userDetails) {
+			return res.status(200).json(successResponse(userDetails));
+		} else {
+			return res.status(401).json(errorResponse("Unauthrozied Access"));
 		}
 	} catch (error) {
 		return res.status(500).json({

@@ -1,4 +1,4 @@
-import { Module, Role } from "../models/index.js";
+import { ConfigurableEntity, Module, Role } from "../models/index.js";
 import Permission from "../models/Permission.js";
 
 const defaultModules = [
@@ -144,6 +144,39 @@ const createDefaultRolesPermissions = async (
 	return seededPermissions;
 };
 
+const seedConfigurableEntities = async (userId, orgId) => {
+	const defaultEntities = [
+		{
+			organization_id: orgId,
+			key: "net_15",
+			value: "15",
+			type: "payment_terms",
+			created_by: userId,
+			updated_by: userId,
+		},
+		{
+			organization_id: orgId,
+			key: "net_30",
+			value: "30",
+			type: "payment_terms",
+			created_by: userId,
+			updated_by: userId,
+		},
+	];
+
+	for (const entity of defaultEntities) {
+		await ConfigurableEntity.findOrCreate({
+			where: {
+				organization_id: entity.org_id,
+				key: entity.key,
+				type: entity.type,
+			},
+			defaults: entity,
+			transaction,
+		});
+	}
+};
+
 const seedValues = async (userId, orgId, transaction) => {
 	const seededModules = await createDefaultModules(userId, orgId, transaction);
 	const seededRoles = await createDefaultRoles(userId, orgId, transaction);
@@ -154,6 +187,7 @@ const seedValues = async (userId, orgId, transaction) => {
 		orgId,
 		transaction
 	);
+	await seedConfigurableEntities(userId, orgId, transaction);
 	console.log("values seeded in db successfully");
 };
 
