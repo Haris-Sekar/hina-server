@@ -3,6 +3,7 @@ import { errorResponse, successResponse } from "../utils/responseFormatter.js";
 import Organization from "../models/Organization.js";
 import { seedValues } from "../utils/seedNewCompanyDBValues.js";
 import { startTransaction } from "../config/db.js";
+import User from "../models/User.js";
 
 const validateGst = async (req, res) => {
 	try {
@@ -52,6 +53,8 @@ const createCompany = async (req, res) => {
 		);
 
 		await seedValues(user_id, company.id, transaction);
+
+		await User.update({ organization_id: company.id }, { where: { id: user_id } });
 
 		await transaction.commit();
 		return res.status(201).json(

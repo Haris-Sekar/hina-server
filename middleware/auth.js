@@ -40,17 +40,16 @@ const authenticateUser = (req, res, next) => {
 					errorResponse("User is suspended, please contact admin", [], 401)
 				);
 		}
+		req.user = user; // Attach user object to request
 
 		if (req.headers.org_id) {
 			const org = await Organization.findOne({
 				where: {
 					id: req.headers.org_id,
 				},
-			});
-			console.log(org);
+			}); 
 			req.org = org;
-		}
-		req.user = user; // Attach user object to request
+		}  
 		next(); // Proceed to the next middleware or route handler
 	})(req, res, next);
 };

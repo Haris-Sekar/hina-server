@@ -1,13 +1,13 @@
 import { DataTypes } from "sequelize";
 import { sequelize } from "../config/db.js";
 
-const ConfigurableEntity = sequelize.define(
-	"ConfigurableEntity",
+const PaymentTerms = sequelize.define(
+	"PaymentTerms",
 	{
 		id: {
 			type: DataTypes.INTEGER,
-			autoIncrement: true,
 			primaryKey: true,
+			autoIncrement: true,
 		},
 		organization_id: {
 			type: DataTypes.INTEGER,
@@ -17,21 +17,31 @@ const ConfigurableEntity = sequelize.define(
 				key: "id",
 			},
 		},
-		key: {
+		name: {
 			type: DataTypes.STRING(255),
 			allowNull: false,
 		},
-		value: {
-			type: DataTypes.TEXT,
-			allowNull: false,
+		number_of_days: {
+			type: DataTypes.INTEGER,
+			allowNull: true,
 		},
-		type: {
-			type: DataTypes.STRING(50),
+		is_default: {
+			type: DataTypes.BOOLEAN,
+			defaultValue: false,
+		},
+		created_time: {
+			type: DataTypes.BIGINT,
 			allowNull: false,
+			defaultValue: Date.now(),
+		},
+		updated_time: {
+			type: DataTypes.BIGINT,
+			allowNull: true,
+			defaultValue: Date.now(),
 		},
 		created_by: {
 			type: DataTypes.INTEGER,
-			allowNull: false,
+			allowNull: true,
 			references: {
 				model: "users",
 				key: "id",
@@ -39,25 +49,17 @@ const ConfigurableEntity = sequelize.define(
 		},
 		updated_by: {
 			type: DataTypes.INTEGER,
-			allowNull: false,
+			allowNull: true,
 			references: {
 				model: "users",
 				key: "id",
 			},
 		},
-		created_time: {
-			type: DataTypes.DATE,
-			defaultValue: DataTypes.NOW,
-		},
-		updated_time: {
-			type: DataTypes.DATE,
-			defaultValue: DataTypes.NOW,
-		},
 	},
 	{
-		tableName: "configurable_entities",
-		timestamps: false, 
+		tableName: "payment_terms",
+		timestamps: false,
 	}
 );
 
-export default ConfigurableEntity;
+export default PaymentTerms;

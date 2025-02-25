@@ -4,11 +4,11 @@
  * @param {string} message - Optional message to include
  */
 const successResponse = (data, message = "Operation successful") => {
-	return {
-		status: "success",
-		message,
-		data,
-	};
+    return {
+        status: "success",
+        message,
+        data,
+    };
 };
 
 /**
@@ -18,16 +18,19 @@ const successResponse = (data, message = "Operation successful") => {
  * @param {number} statusCode - The HTTP status code for the error
  */
 const errorResponse = (message, errors = [], statusCode = 400) => {
-	const response = {
-		status: "error",
-		message,
-		statusCode,
-	};
+    const response = {
+        status: "error",
+        message,
+        statusCode,
+    };
 
-	if (errors.length > 0) {
-		response.errors = errors;
-	}
-	return response;
+    if (errors.length > 0) {
+        response.errors = errors;
+    }
+    return response;
 };
 
-export { successResponse, errorResponse };
+export {
+    successResponse,
+    errorResponse
+};
