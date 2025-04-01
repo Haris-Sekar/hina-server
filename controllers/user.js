@@ -417,7 +417,16 @@ const getAllUsers = async (req, res) => {
         }
 
         const users = await User.findAll(options);
-        res.status(200).json(successResponse(users));
+
+        let parsedUsers = users.map((user) => {
+            const temp = user.dataValues;
+            if (user.id === req.org.created_by) {
+                temp.is_super_admin = true;
+            }
+            return temp;
+        });
+
+        res.status(200).json(successResponse(parsedUsers));
     } catch (error) {
         res.status(500).json(errorResponse("Failed to get all users", [error], 500));
     }
