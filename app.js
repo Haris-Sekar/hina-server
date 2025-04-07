@@ -7,6 +7,7 @@ import {
 import configurePassport from "./config/passport.js";
 import dotenv from "dotenv";
 import cors from "cors";
+import itemRoutes from "./routes/item.js";
 
 const app = express();
 
@@ -34,6 +35,7 @@ app.use("/api/v1/users", user);
 app.use("/api/v1/company", company);
 app.use("/api/v1/customers", customers);
 app.use("/api/v1/modules", modules);
+app.use("/api/v1/items", itemRoutes);
 
 const startApp = async () => {
     await testConnection();

@@ -6,6 +6,10 @@ import Permission from "./Permission.js";
 import PaymentTerms from "./PaymentTerms.js";
 import Customer from "./Customer.js";
 import Address from "./Address.js";
+import ItemGroup from "./ItemGroup.js";
+import Item from "./Item.js";
+import Size from "./Size.js";
+import RateVersion from "./RateVersion.js";
 
 User.belongsTo(Role, {
     foreignKey: "role_id",
@@ -81,6 +85,28 @@ Permission.belongsTo(Module, {
     foreignKey: "module_id",
 });
 
+// Item Group associations
+ItemGroup.hasMany(Item, { foreignKey: "item_group_id" });
+Item.belongsTo(ItemGroup, { foreignKey: "item_group_id" });
+
+// Item associations with Size through RateVersion
+Item.belongsToMany(Size, { through: RateVersion });
+Size.belongsToMany(Item, { through: RateVersion });
+
+// RateVersion associations
+RateVersion.belongsTo(Item, { foreignKey: "item_id" });
+RateVersion.belongsTo(Size, { foreignKey: "size_id" });
+
+// Add these associations
+ItemGroup.belongsTo(User, { as: 'CreatedBy', foreignKey: 'created_by' });
+ItemGroup.belongsTo(User, { as: 'UpdatedBy', foreignKey: 'updated_by' });
+
+Size.belongsTo(User, { as: 'CreatedBy', foreignKey: 'created_by' });
+Size.belongsTo(User, { as: 'UpdatedBy', foreignKey: 'updated_by' });
+
+RateVersion.belongsTo(User, { as: 'CreatedBy', foreignKey: 'created_by' });
+RateVersion.belongsTo(User, { as: 'UpdatedBy', foreignKey: 'updated_by' });
+
 export {
     User,
     Organization,
@@ -90,4 +116,8 @@ export {
     PaymentTerms,
     Customer,
     Address,
+    ItemGroup,
+    Item,
+    Size,
+    RateVersion,
 };
